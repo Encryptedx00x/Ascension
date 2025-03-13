@@ -4,7 +4,7 @@ Este é o repositório do site institucional da Ascension Tecnologias, desenvolv
 
 ## Tecnologias Utilizadas
 
-- Next.js 18
+- Next.js 14
 - TypeScript
 - Tailwind CSS
 - Framer Motion
