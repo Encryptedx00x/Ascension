@@ -29,7 +29,7 @@ Este é o repositório do site institucional da Ascension Tecnologias, desenvolv
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/ascension-site.git
+git clone https://github.com/Encryptedx00x/Ascension.git
 ```
 
 2. Instale as dependências:
@@ -85,6 +85,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## Contato
 
-Ascension Tecnologias - [contato@ascension.dev](mailto:contato@ascension.dev)
+Ascension Tecnologias - [contato@ascn.dev.br](mailto:contato@ascn.dev.br)
 
-Link do Projeto: [https://github.com/seu-usuario/ascension-site](https://github.com/seu-usuario/ascension-site)
+Link do Projeto: [https://github.com/Encryptedx00x/Ascension](https://github.com/Encryptedx00x/Ascension)
