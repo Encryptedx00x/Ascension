@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { routes } from '@/app/routes';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,13 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
           <Link href={routes.home} className="flex items-center">
-            <img src="/images/logo.png" alt="Ascension Tecnologias" className="h-14" />
+            <Image
+              src="/images/logo.png"
+              alt="Ascension Logo"
+              width={150}
+              height={40}
+              className="h-8 w-auto"
+            />
           </Link>
 
           {/* Desktop Menu */}

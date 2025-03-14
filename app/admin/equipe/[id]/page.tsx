@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { FaArrowLeft } from 'react-icons/fa';
 import { routes } from '@/app/routes';
+import Image from 'next/image';
 
 interface TeamMember {
   id: number;
@@ -85,10 +86,12 @@ export default function TeamMemberPage() {
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-1/3">
-            <img
-              src={member.imageUrl}
+            <Image
+              src={member.imageUrl || '/images/default-avatar.png'}
               alt={member.name}
-              className="w-full h-64 object-cover rounded-lg"
+              width={200}
+              height={200}
+              className="rounded-full shadow-lg"
             />
           </div>
           

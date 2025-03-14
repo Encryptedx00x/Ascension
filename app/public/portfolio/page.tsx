@@ -4,6 +4,7 @@ import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { portfolioItems } from '@/app/api/mock-data';
+import Image from 'next/image';
 
 export default function PortfolioPage() {
   return (
@@ -48,9 +49,11 @@ export default function PortfolioPage() {
                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="relative h-60 overflow-hidden">
-                  <img 
-                    src={item.image} 
+                  <Image
+                    src={item.image}
                     alt={item.title}
+                    width={400}
+                    height={300}
                     className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
                   />
                 </div>

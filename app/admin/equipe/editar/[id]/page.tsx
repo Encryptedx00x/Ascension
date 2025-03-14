@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaSave, FaLinkedin, FaGithub } from 'react-icons/fa';
 import Link from 'next/link';
@@ -35,50 +35,31 @@ export default function EditTeamMemberPage({ params }: { params: { id: string } 
     confirmPassword: ''
   });
   
-  const [isLoading, setIsLoading] = useState(false);
+  const [member, setMember] = useState<TeamMember | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    fetchMember();
+  const fetchMember = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/admin/members/${id}`);
+      if (!response.ok) {
+        throw new Error('Erro ao carregar membro');
+      }
+      const data = await response.json();
+      setMember(data);
+    } catch (err) {
+      setError('Erro ao carregar dados do membro');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   }, [id]);
 
-  const fetchMember = async () => {
-    setIsFetching(true);
-    setError('');
-    
-    try {
-      const response = await fetch(`/api/admin/members/${id}`, {
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        throw new Error('Erro ao buscar dados do membro');
-      }
-      
-      const data = await response.json();
-      
-      // Preencher o formulário com os dados do membro
-      setFormData({
-        name: data.name || '',
-        email: data.email || '',
-        phone: data.phone || '',
-        role: data.role || '',
-        bio: data.bio || '',
-        imageUrl: data.imageUrl || '',
-        linkedin: data.linkedin || '',
-        github: data.github || '',
-        password: '',
-        confirmPassword: ''
-      });
-    } catch (err) {
-      console.error('Erro:', err);
-      setError('Erro ao carregar dados do membro. Por favor, tente novamente.');
-    } finally {
-      setIsFetching(false);
-    }
-  };
+  useEffect(() => {
+    fetchMember();
+  }, [fetchMember]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaSearch, FaEye, FaFilter } from 'react-icons/fa';
 import Link from 'next/link';
@@ -61,9 +61,29 @@ export default function BudgetsPage() {
     }
   }, [statusParam]);
 
+  const filterBudgets = useCallback(() => {
+    if (!budgets) return;
+    
+    const filtered = budgets.filter(budget => {
+      if (activeFilter && budget.status !== activeFilter) return false;
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          budget.name.toLowerCase().includes(searchLower) ||
+          budget.email.toLowerCase().includes(searchLower) ||
+          budget.company?.toLowerCase().includes(searchLower) ||
+          budget.phone.toLowerCase().includes(searchLower)
+        );
+      }
+      return true;
+    });
+    
+    setFilteredBudgets(filtered);
+  }, [budgets, activeFilter, searchTerm]);
+
   useEffect(() => {
     filterBudgets();
-  }, [budgets, activeFilter, searchTerm]);
+  }, [filterBudgets]);
 
   const fetchBudgets = async () => {
     setIsLoading(true);
@@ -89,28 +109,6 @@ export default function BudgetsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const filterBudgets = () => {
-    let filtered = [...budgets];
-    
-    // Filtrar por status
-    if (activeFilter !== 'all') {
-      filtered = filtered.filter(budget => budget.status === activeFilter);
-    }
-    
-    // Filtrar por termo de busca
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(budget => 
-        budget.name.toLowerCase().includes(term) ||
-        budget.email.toLowerCase().includes(term) ||
-        budget.company?.toLowerCase().includes(term) ||
-        budget.phone.toLowerCase().includes(term)
-      );
-    }
-    
-    setFilteredBudgets(filtered);
   };
 
   const handleFilterChange = (filter: string) => {

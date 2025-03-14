@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FaUserPlus, FaEdit, FaTrash, FaEye, FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import { routes } from '@/app/routes';
+import Image from 'next/image';
 
 interface TeamMember {
   id: number;
@@ -162,17 +163,13 @@ export default function TeamMembersPage() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10">
-                              {member.imageUrl ? (
-                                <img
-                                  className="h-10 w-10 rounded-full object-cover"
-                                  src={member.imageUrl}
-                                  alt={member.name}
-                                />
-                              ) : (
-                                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                                  {member.name.charAt(0).toUpperCase()}
-                                </div>
-                              )}
+                              <Image
+                                src={member.imageUrl || '/images/default-avatar.png'}
+                                alt={member.name}
+                                width={100}
+                                height={100}
+                                className="w-20 h-20 rounded-full object-cover"
+                              />
                             </div>
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">{member.name}</div>

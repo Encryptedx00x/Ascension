@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaQuoteLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface Testimonial {
   id: number;
@@ -58,10 +59,12 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
     >
       <div className="flex items-center mb-6">
         <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
-          <img
+          <Image
             src={testimonial.image}
             alt={testimonial.name}
-            className="w-full h-full object-cover"
+            width={64}
+            height={64}
+            className="w-16 h-16 rounded-full object-cover"
           />
         </div>
         <div>

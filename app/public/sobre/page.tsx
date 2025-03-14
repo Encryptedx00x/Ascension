@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Image from 'next/image';
 
 export default function SobrePage() {
   return (
@@ -214,7 +215,7 @@ export default function SobrePage() {
                   </div>
                 </div>
                 <p className="text-gray-700">
-                  "A equipe da Ascension Tecnologias superou todas as nossas expectativas. O novo sistema implementado aumentou nossa produtividade em 30% e reduziu significativamente os custos operacionais."
+                  &quot;A equipe da Ascension Tecnologias superou todas as nossas expectativas. O novo sistema implementado aumentou nossa produtividade em 30% e reduziu significativamente os custos operacionais.&quot;
                 </p>
               </div>
               
@@ -232,7 +233,7 @@ export default function SobrePage() {
                   </div>
                 </div>
                 <p className="text-gray-700">
-                  "Nosso e-commerce desenvolvido pela Ascension Tecnologias triplicou nossas vendas no primeiro mês. A interface é intuitiva e o suporte técnico é excepcional. Recomendo sem hesitação!"
+                  &quot;Nosso e-commerce desenvolvido pela Ascension Tecnologias triplicou nossas vendas no primeiro mês. A interface é intuitiva e o suporte técnico é excepcional. Recomendo sem hesitação!&quot;
                 </p>
               </div>
               
@@ -250,7 +251,7 @@ export default function SobrePage() {
                   </div>
                 </div>
                 <p className="text-gray-700">
-                  "O sistema de gestão de processos desenvolvido pela Ascension Tecnologias revolucionou nossa forma de trabalhar. Agradeço pela dedicação e profissionalismo da equipe em todas as etapas do projeto."
+                  &quot;O sistema de gestão de processos desenvolvido pela Ascension Tecnologias revolucionou nossa forma de trabalhar. Agradeço pela dedicação e profissionalismo da equipe em todas as etapas do projeto.&quot;
                 </p>
               </div>
             </div>

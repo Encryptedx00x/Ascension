@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCheck, FaTimes, FaSpinner, FaEnvelope, FaPhone, FaBuilding, FaCalendarAlt, FaMoneyBillWave } from 'react-icons/fa';
@@ -44,12 +44,9 @@ export default function BudgetDetailPage() {
   const [budget, setBudget] = useState<Budget | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchBudgetDetails();
-  }, []);
-
-  const fetchBudgetDetails = async () => {
+  const fetchBudgetDetails = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await fetch(`/api/admin/budgets/${params.id}`, {
@@ -86,7 +83,11 @@ export default function BudgetDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params.id, router]);
+
+  useEffect(() => {
+    fetchBudgetDetails();
+  }, [fetchBudgetDetails]);
 
   const updateStatus = async (newStatus: Budget['status']) => {
     try {
