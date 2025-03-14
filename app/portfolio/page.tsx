@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -33,19 +33,19 @@ const PortfolioPage = () => {
   const categories = ['Todos', 'Website', 'E-commerce', 'Sistema', 'Landing Page'];
 
   // Dados de exemplo para preencher propriedades que podem não estar na API
-  const defaultTechnologies = {
+  const defaultTechnologies = useMemo(() => ({
     'Website': ['Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion'],
     'E-commerce': ['Next.js', 'TypeScript', 'Stripe', 'MongoDB'],
     'Sistema': ['React', 'Node.js', 'PostgreSQL', 'Docker'],
     'Landing Page': ['Next.js', 'Tailwind CSS', 'Google Analytics']
-  };
+  }), []);
   
-  const defaultFeatures = {
+  const defaultFeatures = useMemo(() => ({
     'Website': ['Design Responsivo', 'Animações Suaves', 'Blog Integrado', 'Painel Administrativo', 'SEO Otimizado'],
     'E-commerce': ['Gestão de Produtos', 'Pagamentos Online', 'Carrinho de Compras', 'Sistema de Cupons', 'Painel Administrativo'],
     'Sistema': ['Múltiplos Módulos', 'Dashboards', 'Relatórios', 'Controle de Acesso', 'API REST'],
     'Landing Page': ['Alta Conversão', 'SEO Otimizado', 'CTA Estratégicos', 'Formulários Integrados', 'Analytics']
-  };
+  }), []);
 
   // Função para validar URLs de imagem
   const validateImageUrl = (url: string | undefined) => {

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -110,9 +112,11 @@ export default function SobrePage() {
               {/* Membro da Equipe 1 */}
               <div className="text-center">
                 <div className="relative w-48 h-48 mx-auto mb-4 overflow-hidden rounded-full">
-                  <img 
+                  <Image 
                     src="/images/team/placeholder-1.svg" 
                     alt="Foto do fundador" 
+                    width={300}
+                    height={300}
                     className="w-full h-full object-cover"
                     onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/300?text=Fundador'}
                   />
@@ -127,9 +131,11 @@ export default function SobrePage() {
               {/* Membro da Equipe 2 */}
               <div className="text-center">
                 <div className="relative w-48 h-48 mx-auto mb-4 overflow-hidden rounded-full">
-                  <img 
+                  <Image 
                     src="/images/team/placeholder-2.svg" 
                     alt="Foto da CTO" 
+                    width={300}
+                    height={300}
                     className="w-full h-full object-cover"
                     onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/300?text=CTO'}
                   />
@@ -144,9 +150,11 @@ export default function SobrePage() {
               {/* Membro da Equipe 3 */}
               <div className="text-center">
                 <div className="relative w-48 h-48 mx-auto mb-4 overflow-hidden rounded-full">
-                  <img 
+                  <Image 
                     src="/images/team/placeholder-3.svg" 
                     alt="Foto do Diretor de Criação" 
+                    width={300}
+                    height={300}
                     className="w-full h-full object-cover"
                     onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/300?text=Designer'}
                   />
