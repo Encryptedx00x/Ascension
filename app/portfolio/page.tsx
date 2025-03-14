@@ -27,6 +27,8 @@ const PortfolioPage = () => {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedFeatures, setSelectedFeatures] = useState({});
+  const [selectedTechnologies, setSelectedTechnologies] = useState({});
 
   const categories = ['Todos', 'Website', 'E-commerce', 'Sistema', 'Landing Page'];
 
@@ -108,6 +110,11 @@ const PortfolioPage = () => {
     
     fetchPortfolioItems();
   }, []);
+
+  useEffect(() => {
+    setSelectedFeatures(defaultFeatures);
+    setSelectedTechnologies(defaultTechnologies);
+  }, [defaultFeatures, defaultTechnologies]);
 
   const filteredItems = portfolioItems.filter(item => {
     if (!item) return false;

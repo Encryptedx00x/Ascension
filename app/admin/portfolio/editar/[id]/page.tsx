@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { FaArrowLeft, FaSave, FaPlus, FaTimes } from 'react-icons/fa';
 import { routes } from '@/app/routes';
@@ -38,39 +38,35 @@ export default function EditPortfolioItemPage({ params }: { params: { id: string
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    fetchItem();
-  }, []);
-
-  const fetchItem = async () => {
+  const fetchItem = useCallback(async () => {
     try {
-      // Buscar item específico pelo ID
-      const response = await fetch(`/api/admin/portfolio/${params.id}`, {
-        credentials: 'include'
-      });
-      
+      const response = await fetch(`/api/admin/portfolio/${params.id}`);
       if (!response.ok) {
         throw new Error('Erro ao carregar item');
       }
-      
-      const { data: item } = await response.json();
-      
-      // Garantir que tecnologias e funcionalidades sejam arrays
-      const technologies = Array.isArray(item.technologies) ? item.technologies : [''];
-      const features = Array.isArray(item.features) ? item.features : [''];
-      
+      const data = await response.json();
       setFormData({
-        ...item,
-        technologies,
-        features
+        title: data.title || '',
+        description: data.description || '',
+        imageUrl: data.imageUrl || '',
+        category: data.category || '',
+        link: data.link || '',
+        client: data.client || '',
+        technologies: JSON.parse(data.technologies || '[]'),
+        features: JSON.parse(data.features || '[]'),
+        featured: data.featured || false
       });
     } catch (err) {
-      setError('Erro ao carregar item. Por favor, tente novamente.');
-      console.error('Erro:', err);
+      setError('Erro ao carregar dados do item');
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params.id]);
+
+  useEffect(() => {
+    fetchItem();
+  }, [fetchItem]);
 
   const validateImageUrl = (url: string) => {
     if (!url) return false;

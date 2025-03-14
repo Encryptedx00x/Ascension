@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+export const runtime = 'nodejs';
+
 export async function GET(request: Request) {
   try {
     const token = request.cookies.get('adminToken')?.value;

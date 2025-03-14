@@ -288,8 +288,8 @@ export default function AddPortfolioItemPage() {
               </div>
 
               <div className="mb-6">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Tecnologias Utilizadas
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Tecnologias utilizadas (pressione &quot;Enter&quot; para adicionar)
                 </label>
                 {formData.technologies.map((tech, index) => (
                   <div key={index} className="flex items-center mb-2">

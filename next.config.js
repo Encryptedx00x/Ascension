@@ -40,9 +40,9 @@ const nextConfig = {
   },
   experimental: {
     serverActions: true,
-    runtime: {
-      excludeFiles: ['**/api/auth/**/*'],
-    },
+  },
+  middleware: {
+    skipMiddlewareUrlNormalize: true,
   },
 };
 

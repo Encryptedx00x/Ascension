@@ -11,6 +11,8 @@ export interface JwtPayload {
   exp?: number;
 }
 
+export const runtime = 'nodejs';
+
 /**
  * Verifica se um token JWT é válido sem usar o módulo crypto
  * @param token Token JWT
