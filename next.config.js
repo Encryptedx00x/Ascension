@@ -40,10 +40,7 @@ const nextConfig = {
   },
   experimental: {
     serverActions: true,
-  },
-  middleware: {
-    skipMiddlewareUrlNormalize: true,
-  },
+  }
 };
 
 module.exports = nextConfig; 
