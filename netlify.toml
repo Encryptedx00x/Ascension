@@ -4,6 +4,28 @@
 
 [build.environment]
   NEXT_PUBLIC_RUNTIME = "nodejs"
+  NODE_VERSION = "18"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs" 
+  package = "@netlify/plugin-nextjs"
+
+[build.processing]
+  skip_processing = true
+
+[build.processing.css]
+  bundle = false
+  minify = false
+
+[build.processing.js]
+  bundle = false
+  minify = false
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = false
+
+# Prevent dependency caching to avoid Prisma Client initialization errors
+[build.environment.NETLIFY]
+  SKIP_CACHE = "true"
