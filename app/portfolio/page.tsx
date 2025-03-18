@@ -109,7 +109,7 @@ const PortfolioPage = () => {
     };
     
     fetchPortfolioItems();
-  }, []);
+  }, [defaultFeatures, defaultTechnologies]);
 
   useEffect(() => {
     setSelectedFeatures(defaultFeatures);

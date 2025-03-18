@@ -6,10 +6,10 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 // Verifica autenticação do admin
-async function checkAdminAuth(request: Request) {
+async function checkAdminAuth(request: NextRequest) {
   try {
-    const token = await verifyJwtAuth(request);
-    if (!token) {
+    const isAuthenticated = await checkApiAuth(request);
+    if (!isAuthenticated) {
       return false;
     }
     return true;
@@ -116,7 +116,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 // DELETE /api/admin/members/:id
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -162,4 +162,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-} 
+}

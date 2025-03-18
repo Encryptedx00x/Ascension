@@ -6,10 +6,10 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 // Verifica autenticação do admin
-async function checkAdminAuth(request: Request) {
+async function checkAdminAuth(request: NextRequest) {
   try {
-    const token = await verifyJwtAuth(request);
-    if (!token) {
+    const isAuthenticated = await checkApiAuth(request);
+    if (!isAuthenticated) {
       return false;
     }
     return true;
@@ -97,8 +97,10 @@ export async function POST(request: NextRequest) {
         role: data.role || '',
         bio: data.bio || '',
         imageUrl: data.imageUrl || '',
-        linkedin: data.linkedin || '',
-        github: data.github || '',
+        socialLinks: JSON.stringify({
+          linkedin: data.linkedin || '',
+          github: data.github || ''
+        }),
         password: hashedPassword,
       },
       select: {
@@ -109,8 +111,7 @@ export async function POST(request: NextRequest) {
         role: true,
         bio: true,
         imageUrl: true,
-        linkedin: true,
-        github: true,
+        socialLinks: true,
         createdAt: true,
         // Não retornamos a senha
       }
@@ -127,4 +128,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

@@ -17,10 +17,10 @@ interface BudgetFeatures {
 }
 
 // Verifica autenticação do admin
-async function checkAdminAuth(request: Request) {
+async function checkAdminAuth(request: NextRequest) {
   try {
-    const token = await verifyJwtAuth(request);
-    if (!token) {
+    const isAuthenticated = await checkApiAuth(request);
+    if (!isAuthenticated) {
       return false;
     }
     return true;
@@ -201,4 +201,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-} 
+}

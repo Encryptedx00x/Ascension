@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export const runtime = 'nodejs';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get('adminToken')?.value;
 
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     }
 
     // Verificar se o token é válido
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET) as { email: string; role: string };
     console.log('Token verificado:', decoded);
 
     return NextResponse.json({ 
@@ -34,4 +34,4 @@ export async function GET(request: Request) {
       { status: 401 }
     );
   }
-} 
+}

@@ -46,6 +46,7 @@ export default function EditPortfolioItemPage({ params }: { params: { id: string
       }
       const data = await response.json();
       setFormData({
+        id: params.id,
         title: data.title || '',
         description: data.description || '',
         imageUrl: data.imageUrl || '',
@@ -448,4 +449,4 @@ export default function EditPortfolioItemPage({ params }: { params: { id: string
       </div>
     </main>
   );
-} 
+}
