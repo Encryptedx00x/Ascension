@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum BudgetStatus {
+  pendente
+  reviewing
+  approved
+  rejected
+}
+
+enum ServiceRequestStatus {
+  pendente
+  contacted
+  completed
+  rejected
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Budget {
+  id                String       @id @default(uuid())
+  name              String
+  email             String
+  phone             String
+  company           String?
+  projectType       String
+  projectDescription String
+  deadline          String
+  budget            String
+  features          Json
+  designPreferences String
+  references        String
+  howFound          String
+  additionalInfo    String
+  status            BudgetStatus @default(pendente)
+  selectedModel     String?
+  modelPrice        String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Portfolio {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  imageUrl    String
+  category    String
+  link        String?
+  client      String?
+  technologies String?  // Armazenado como JSON string
+  features    String?  // Armazenado como JSON string
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TeamMember {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String   @unique
+  phone       String?
+  role        String?
+  position    String?
+  bio         String?
+  imageUrl    String?
+  socialLinks String?
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Newsletter {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  status    String   @default("pendente")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
+
+model ServiceRequest {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  service   String
+  message   String
+  status    ServiceRequestStatus @default(pendente)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
