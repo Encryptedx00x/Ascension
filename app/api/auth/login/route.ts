@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import { generateJwtToken } from '../utils';
 
 export const runtime = 'nodejs';
-
-const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,37 +52,23 @@ export async function POST(request: NextRequest) {
     const token = generateJwtToken({
       userId: String(member.id),
       email: member.email,
-      role: member.role || 'member'
+      role: member.role
     });
 
-    // Criar resposta
-    const response = NextResponse.json({
-      success: true,
-      user: {
-        id: member.id,
-        name: member.name,
-        email: member.email,
-        role: member.role
-      }
-    });
-
-    // Definir cookie com o token
-    response.cookies.set({
-      name: 'adminToken',
-      value: token,
+    // Configurar cookie
+    cookies().set('token', token, {
       httpOnly: true,
-      path: '/',
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 60 * 60 * 24, // 24 horas
-      sameSite: 'lax',
-      domain: '' // Certificar que o cookie será enviado para o mesmo domínio
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 60 * 60 * 24 // 24 horas
     });
 
-    return response;
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Erro no login:', error);
     return NextResponse.json(
-      { error: 'Ocorreu um erro no login. Tente novamente mais tarde.' },
+      { error: 'Erro interno do servidor' },
       { status: 500 }
     );
   }
