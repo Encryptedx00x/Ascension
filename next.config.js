@@ -16,11 +16,8 @@ const nextConfig = {
       'raw.githubusercontent.com',
       'github.com',
       'media.giphy.com',
-      'res.cloudinary.com',
-      'benevolent-faun-bbf9fe.netlify.app',
-      'netlify.app'
+      'res.cloudinary.com'
     ],
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -31,6 +28,7 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    unoptimized: process.env.NODE_ENV === 'production',
   },
   async redirects() {
     return [
@@ -44,9 +42,19 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  // Configuração adicional para o Netlify
-  output: 'standalone',
-  distDir: '.next',
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      if (process.env.NETLIFY) {
+        console.log('Configurando para ambiente Netlify...');
+      }
+    }
+    
+    return config;
+  },
+  env: {
+    DATABASE_URL: process.env.DATABASE_URL || 'file:./prisma/data.db',
+    JWT_SECRET: process.env.JWT_SECRET || 'ascension-website-jwt-secret-2024',
+  }
 };
 
 module.exports = nextConfig; 

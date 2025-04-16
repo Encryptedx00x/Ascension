@@ -26,8 +26,7 @@ function decodeJwtToken(token: string) {
 }
 
 // FORÇAR AUTENTICAÇÃO EM TODAS AS ROTAS ADMINISTRATIVAS
-// Definindo como true para desativar a proteção durante o desenvolvimento
-const DEV_MODE = process.env.NODE_ENV !== 'production';
+const DEV_MODE = false; // Forçando autenticação mesmo em ambiente de desenvolvimento
 
 export const runtime = 'nodejs';
 
@@ -37,11 +36,6 @@ export async function middleware(request: NextRequest) {
     '/api/auth/login',
     '/api/auth/logout',
     '/api/auth/check',
-    '/api/portfolio',
-    '/api/contact',
-    '/api/newsletter',
-    '/api/budget',
-    '/api/services/requests',
     '/admin/login',
     '/admin/diagnose',
     '/admin/check-login'
@@ -68,8 +62,8 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/admin') || 
       request.nextUrl.pathname.startsWith('/api/admin')) {
     try {
-      // Obter o token do cookie (verificar ambos os nomes possíveis)
-      const token = request.cookies.get('token')?.value || request.cookies.get('adminToken')?.value;
+      // Obter o token do cookie
+      const token = request.cookies.get('adminToken')?.value;
       
       if (!token) {
         console.log('Token não encontrado, redirecionando para login');
