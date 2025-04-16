@@ -10,10 +10,26 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Regras de redirecionamento para APIs
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/nextjs-server"
+  status = 200
+  force = true
+
+# Regra para imagens
+[[redirects]]
+  from = "/images/*"
+  to = "/images/:splat"
+  status = 200
+  force = true
+
+# Regra para rotas de páginas  
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/.netlify/functions/nextjs-server"
   status = 200
+  force = true
 
 [[headers]]
   for = "/*"

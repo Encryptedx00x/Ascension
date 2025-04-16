@@ -16,8 +16,11 @@ const nextConfig = {
       'raw.githubusercontent.com',
       'github.com',
       'media.giphy.com',
-      'res.cloudinary.com'
+      'res.cloudinary.com',
+      'benevolent-faun-bbf9fe.netlify.app',
+      'netlify.app'
     ],
+    unoptimized: process.env.NODE_ENV === 'production',
     remotePatterns: [
       {
         protocol: 'https',
@@ -40,7 +43,9 @@ const nextConfig = {
   },
   experimental: {
     serverActions: true,
-  }
+  },
+  // Configuração adicional para o Netlify
+  output: 'standalone'
 };
 
 module.exports = nextConfig; 

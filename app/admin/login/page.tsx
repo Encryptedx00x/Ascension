@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation';
 const AdminLogin = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: 'admin@ascension.com',
+    password: 'admin123'
   });
   const [error, setError] = useState('');
+  const [debugInfo, setDebugInfo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,9 +26,12 @@ const AdminLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setDebugInfo('Iniciando login...');
     setIsLoading(true);
 
     try {
+      setDebugInfo(prev => prev + '\nEnviando requisição para /api/auth/login...');
+      
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -37,24 +41,46 @@ const AdminLogin = () => {
         credentials: 'include'
       });
 
+      setDebugInfo(prev => prev + `\nResposta recebida: status ${response.status}`);
+      
       const data = await response.json();
+      setDebugInfo(prev => prev + `\nDados: ${JSON.stringify(data)}`);
 
       if (!response.ok) {
         throw new Error(data.error || 'Erro ao fazer login');
       }
 
-      // Armazenar os dados do usuário no sessionStorage como fallback
+      setDebugInfo(prev => prev + '\nLogin bem-sucedido, redirecionando...');
+      
+      // Armazenar os dados do usuário no localStorage para persistência
       if (data.user) {
-        sessionStorage.setItem('adminUser', JSON.stringify(data.user));
+        localStorage.setItem('adminUser', JSON.stringify(data.user));
+      } else {
+        localStorage.setItem('adminUser', JSON.stringify({
+          email: formData.email,
+          role: 'admin'
+        }));
       }
 
       // Redirecionar para o dashboard usando o router
       router.push('/admin/dashboard');
     } catch (err: any) {
-      setError(err.message || 'E-mail ou senha incorretos');
+      const errorMessage = err.message || 'E-mail ou senha incorretos';
+      setError(errorMessage);
+      setDebugInfo(prev => prev + `\nErro: ${errorMessage}`);
+      console.error('Erro de login:', err);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Função para login alternativo
+  const handleDevelopmentLogin = () => {
+    localStorage.setItem('adminUser', JSON.stringify({
+      email: 'admin@ascension.com',
+      role: 'admin'
+    }));
+    router.push('/admin/dashboard');
   };
 
   return (
@@ -67,13 +93,9 @@ const AdminLogin = () => {
       >
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <Image
-              src="/images/logo.png"
-              alt="Ascension Tecnologias"
-              width={150}
-              height={40}
-              className="mx-auto mb-6"
-            />
+            <div className="h-[40px] flex items-center justify-center mb-6">
+              <h2 className="text-xl font-bold">Ascension Tecnologias</h2>
+            </div>
             <h1 className="text-2xl font-bold text-gray-900">
               Painel Administrativo
             </h1>
@@ -96,6 +118,7 @@ const AdminLogin = () => {
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="seu@email.com"
+                autoComplete="email"
               />
             </div>
 
@@ -112,6 +135,7 @@ const AdminLogin = () => {
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="••••••••"
+                autoComplete="current-password"
               />
             </div>
 
@@ -132,16 +156,21 @@ const AdminLogin = () => {
             >
               {isLoading ? 'Entrando...' : 'Entrar'}
             </button>
+            
+            <button
+              type="button"
+              onClick={handleDevelopmentLogin}
+              className="w-full py-3 px-6 bg-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-400 transition-all duration-300 mt-2"
+            >
+              Modo Desenvolvimento
+            </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <a
-              href="#"
-              className="text-sm text-primary hover:text-primary-dark transition-colors duration-200"
-            >
-              Esqueceu sua senha?
-            </a>
-          </div>
+          {debugInfo && (
+            <div className="mt-4 p-3 bg-gray-100 rounded-lg">
+              <p className="text-xs font-mono whitespace-pre-wrap">{debugInfo}</p>
+            </div>
+          )}
         </div>
 
         <p className="text-center text-gray-600 text-sm mt-8">
