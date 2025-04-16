@@ -20,7 +20,7 @@ const nextConfig = {
       'benevolent-faun-bbf9fe.netlify.app',
       'netlify.app'
     ],
-    unoptimized: process.env.NODE_ENV === 'production',
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -45,7 +45,8 @@ const nextConfig = {
     serverActions: true,
   },
   // Configuração adicional para o Netlify
-  output: 'standalone'
+  output: 'standalone',
+  distDir: '.next',
 };
 
 module.exports = nextConfig; 

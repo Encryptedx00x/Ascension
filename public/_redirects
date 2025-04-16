@@ -1,0 +1,5 @@
+# Redirecionamentos para o Netlify
+/_next/static/*  /_next/static/:splat  200
+/images/*  /images/:splat  200
+/api/*  /.netlify/functions/nextjs-server/api/:splat  200
+/*  /.netlify/functions/nextjs-server  200 

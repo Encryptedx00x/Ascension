@@ -7,13 +7,23 @@
   NPM_VERSION = "9"
   PRISMA_GENERATE_IN_POSTBUILD = "true"
 
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client", "prisma"]
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# Regra para arquivos estáticos
+[[redirects]]
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
+  status = 200
 
 # Regras de redirecionamento para APIs
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/nextjs-server"
+  to = "/.netlify/functions/nextjs-server/api/:splat"
   status = 200
   force = true
 
@@ -22,14 +32,18 @@
   from = "/images/*"
   to = "/images/:splat"
   status = 200
-  force = true
 
-# Regra para rotas de páginas  
+# Regra para o favicon e outros arquivos na raiz
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/favicon.ico"
+  status = 200
+
+# Regra padrão
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/nextjs-server"
   status = 200
-  force = true
 
 [[headers]]
   for = "/*"

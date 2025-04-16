@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
+    "postbuild": "node netlify.js",
     "start": "next start",
     "lint": "next lint",
     "seed": "ts-node -P tsconfig.seed.json prisma/seed.ts"
