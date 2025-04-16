@@ -28,7 +28,6 @@ const nextConfig = {
         hostname: '**',
       },
     ],
-    unoptimized: process.env.NODE_ENV === 'production',
   },
   async redirects() {
     return [
@@ -41,19 +40,6 @@ const nextConfig = {
   },
   experimental: {
     serverActions: true,
-  },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      if (process.env.NETLIFY) {
-        console.log('Configurando para ambiente Netlify...');
-      }
-    }
-    
-    return config;
-  },
-  env: {
-    DATABASE_URL: process.env.DATABASE_URL || 'file:./prisma/data.db',
-    JWT_SECRET: process.env.JWT_SECRET || 'ascension-website-jwt-secret-2024',
   }
 };
 

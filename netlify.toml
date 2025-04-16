@@ -6,34 +6,13 @@
   NODE_VERSION = "18"
   NPM_VERSION = "9"
   PRISMA_GENERATE_IN_POSTBUILD = "true"
-  DATABASE_URL = "file:./prisma/data.db"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Rota para arquivos estáticos
-[[redirects]]
-  from = "/_next/static/*"
-  to = "/_next/static/:splat"
-  status = 200
-
-# Rota para imagens
-[[redirects]]
-  from = "/images/*"
-  to = "/images/:splat"
-  status = 200
-
-# Rota para API
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/nextjs-server/api/:splat"
-  status = 200
-  force = true
-
-# Fallback para todas as outras rotas
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/nextjs-server"
+  to = "/index.html"
   status = 200
 
 [[headers]]
