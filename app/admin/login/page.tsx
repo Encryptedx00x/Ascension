@@ -51,7 +51,7 @@ const AdminLogin = () => {
       // Redirecionar para o dashboard usando o router
       router.push('/admin/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Usuário ou senha incorretos');
+      setError(err.message || 'Nome de usuário ou senha incorretos');
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +85,7 @@ const AdminLogin = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                Usuário
+                Nome de Usuário
               </label>
               <input
                 type="text"
@@ -134,8 +134,10 @@ const AdminLogin = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Use o usuário <strong>admin</strong> e senha <strong>admin123</strong> para o primeiro acesso
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Use as credenciais padrão: admin / admin123
+            </p>
           </div>
         </div>
 

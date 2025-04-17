@@ -1,46 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { checkApiAuth } from '../auth/utils';
 
 const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
-    
+
     if (!email) {
       return NextResponse.json(
-        { success: false, error: 'Email é obrigatório' },
+        { error: 'O email é obrigatório' },
         { status: 400 }
       );
     }
 
-    // Verificar se o email já está cadastrado
-    const existing = await prisma.newsletter.findUnique({
+    // Verificar se o email já existe
+    const existingSubscription = await prisma.newsletter.findUnique({
       where: { email }
     });
 
-    if (existing) {
+    if (existingSubscription) {
       return NextResponse.json(
-        { success: false, error: 'Este email já está inscrito em nossa newsletter.' },
+        { error: 'Este email já está inscrito na newsletter' },
         { status: 409 }
       );
     }
 
     // Criar nova inscrição
-    const newsletter = await prisma.newsletter.create({
+    const newSubscription = await prisma.newsletter.create({
       data: { email }
     });
 
     return NextResponse.json({
       success: true,
-      message: 'Inscrição realizada com sucesso!',
-      data: newsletter
+      message: 'Inscrição realizada com sucesso',
+      data: newSubscription
     });
+
   } catch (error) {
-    console.error('Erro ao inscrever na newsletter:', error);
+    console.error('Erro ao processar inscrição na newsletter:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro ao processar inscrição. Por favor, tente novamente mais tarde.' },
+      { error: 'Erro ao processar sua inscrição' },
       { status: 500 }
     );
   }
@@ -48,29 +48,30 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Verificar autenticação de admin
-    const isAuthenticated = await checkApiAuth(request);
+    // Verificar autenticação de admin aqui
+    const adminToken = request.cookies.get('adminToken')?.value;
     
-    if (!isAuthenticated) {
+    if (!adminToken) {
       return NextResponse.json(
-        { success: false, error: 'Não autorizado' },
+        { error: 'Não autorizado' },
         { status: 401 }
       );
     }
 
-    // Buscar todas as inscrições
-    const newsletters = await prisma.newsletter.findMany({
+    // Obter todos os emails da newsletter
+    const subscriptions = await prisma.newsletter.findMany({
       orderBy: { createdAt: 'desc' }
     });
 
     return NextResponse.json({
       success: true,
-      data: newsletters
+      data: subscriptions
     });
+
   } catch (error) {
-    console.error('Erro ao buscar inscrições:', error);
+    console.error('Erro ao buscar inscrições da newsletter:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro ao buscar inscrições.' },
+      { error: 'Erro ao buscar inscrições da newsletter' },
       { status: 500 }
     );
   }

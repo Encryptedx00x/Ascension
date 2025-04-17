@@ -162,9 +162,22 @@ export default function PortfolioSection() {
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                     {item.description}
                   </p>
-                  <Link href={`${routes.portfolio}?projeto=${item.id}`} className="inline-flex items-center text-primary font-medium">
-                    Ver Detalhes <FaArrowRight className="ml-2" />
-                  </Link>
+                  <div className="flex justify-between items-center">
+                    <Link href={`${routes.portfolio}?projeto=${item.id}`} className="inline-flex items-center text-primary font-medium">
+                      Ver Detalhes <FaArrowRight className="ml-2" />
+                    </Link>
+                    
+                    {item.link && (
+                      <a 
+                        href={item.link} 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-white bg-primary px-3 py-1 rounded-lg text-sm font-medium"
+                      >
+                        Ver Projeto
+                      </a>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}

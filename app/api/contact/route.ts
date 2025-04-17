@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { checkApiAuth } from '../auth/utils';
 
 const prisma = new PrismaClient();
 
@@ -27,20 +26,19 @@ export async function POST(request: NextRequest) {
         phone: data.phone || '',
         subject: data.subject || '',
         message: data.message,
-        status: 'pendente'
+        status: 'pending'
       }
     });
 
     return NextResponse.json({
       success: true,
-      message: 'Mensagem enviada com sucesso! Entraremos em contato em breve.',
       data: contact
     });
 
   } catch (error) {
     console.error('Erro ao criar contato:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro ao criar contato. Por favor, tente novamente mais tarde.' },
+      { error: 'Erro ao criar contato' },
       { status: 500 }
     );
   }
@@ -48,12 +46,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Verificar autenticação de admin
-    const isAuthenticated = await checkApiAuth(request);
+    // Verificar autenticação de admin aqui
+    const adminToken = request.cookies.get('adminToken')?.value;
     
-    if (!isAuthenticated) {
+    if (!adminToken) {
       return NextResponse.json(
-        { success: false, error: 'Não autorizado' },
+        { error: 'Não autorizado' },
         { status: 401 }
       );
     }
@@ -71,7 +69,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Erro ao buscar contatos:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro ao buscar contatos' },
+      { error: 'Erro ao buscar contatos' },
       { status: 500 }
     );
   }
@@ -79,12 +77,12 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    // Verificar autenticação de admin
-    const isAuthenticated = await checkApiAuth(request);
+    // Verificar autenticação de admin aqui
+    const adminToken = request.cookies.get('adminToken')?.value;
     
-    if (!isAuthenticated) {
+    if (!adminToken) {
       return NextResponse.json(
-        { success: false, error: 'Não autorizado' },
+        { error: 'Não autorizado' },
         { status: 401 }
       );
     }
@@ -93,7 +91,7 @@ export async function PATCH(request: NextRequest) {
 
     if (!id || !status) {
       return NextResponse.json(
-        { success: false, error: 'ID e status são obrigatórios' },
+        { error: 'ID e status são obrigatórios' },
         { status: 400 }
       );
     }
@@ -113,7 +111,7 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error('Erro ao atualizar status do contato:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro ao atualizar status do contato' },
+      { error: 'Erro ao atualizar status do contato' },
       { status: 500 }
     );
   }
