@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
 
 interface JwtPayload {
-  userId: string;
-  email: string;
-  role: string;
+  id: string;
+  username: string;
+  role?: string;
   iat?: number;
   exp?: number;
 }
@@ -45,18 +45,25 @@ export function verifyTokenWithoutCrypto(token: string): JwtPayload | null {
  */
 export async function checkApiAuth(request: NextRequest): Promise<boolean> {
   try {
-    const token = request.cookies.get('adminToken')?.value;
+    const token = request.cookies.get('adminToken')?.value || 
+                  request.cookies.get('token')?.value;
     
     if (!token) {
+      console.log('Autenticação falhou: Token não encontrado');
       return false;
     }
     
     const payload = verifyTokenWithoutCrypto(token);
-    if (!payload || payload.role !== 'admin') {
+    
+    if (!payload) {
+      console.log('Autenticação falhou: Token inválido');
       return false;
     }
     
-    return true;
+    // Verificar se é um token de administrador
+    const isAdmin = payload.role === 'admin' || payload.username === 'admin';
+    
+    return isAdmin;
   } catch (error) {
     console.error('Erro na verificação do token:', error);
     return false;

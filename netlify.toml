@@ -6,10 +6,20 @@
   NODE_VERSION = "18"
   NPM_VERSION = "9"
   PRISMA_GENERATE_IN_POSTBUILD = "true"
+  PRISMA_CLI_BINARY_TARGETS = "rhel-openssl-1.0.x"
+  # As variáveis POSTGRES_PRISMA_URL, POSTGRES_URL_NON_POOLING e JWT_SECRET
+  # devem ser configuradas no painel do Netlify
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# Configuração para garantir que rotas de API funcionem corretamente
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+
+# Configuração para garantir que as rotas do Next.js funcionem corretamente
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -21,4 +31,9 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()" 
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;"
+
+# Comandos de lifecycle para o Prisma
+[build.lifecycle]
+  onBuild = "npx prisma generate && npx prisma migrate deploy" 

@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const AdminLogin = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
   });
   const [error, setError] = useState('');
@@ -51,7 +51,7 @@ const AdminLogin = () => {
       // Redirecionar para o dashboard usando o router
       router.push('/admin/dashboard');
     } catch (err: any) {
-      setError(err.message || 'E-mail ou senha incorretos');
+      setError(err.message || 'Usuário ou senha incorretos');
     } finally {
       setIsLoading(false);
     }
@@ -84,18 +84,18 @@ const AdminLogin = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                E-mail
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                Usuário
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="seu@email.com"
+                placeholder="admin"
               />
             </div>
 
@@ -134,13 +134,8 @@ const AdminLogin = () => {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <a
-              href="#"
-              className="text-sm text-primary hover:text-primary-dark transition-colors duration-200"
-            >
-              Esqueceu sua senha?
-            </a>
+          <div className="mt-6 text-center text-sm text-gray-600">
+            Use o usuário <strong>admin</strong> e senha <strong>admin123</strong> para o primeiro acesso
           </div>
         </div>
 

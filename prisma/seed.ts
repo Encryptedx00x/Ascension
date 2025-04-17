@@ -1,42 +1,32 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Verificar se já existe um admin
-  const adminExists = await prisma.teamMember.findFirst({
-    where: {
-      email: 'admin@ascension.com',
-      role: 'admin'
-    }
+  console.log(`Start seeding...`);
+
+  // Criar administrador padrão
+  const adminExists = await prisma.admin.findFirst({
+    where: { username: 'admin' },
   });
 
   if (!adminExists) {
-    // Criar admin padrão
     const hashedPassword = await bcrypt.hash('admin123', 10);
-    
-    await prisma.teamMember.create({
+    await prisma.admin.create({
       data: {
-        name: 'Administrador',
-        email: 'admin@ascension.com',
+        username: 'admin',
         password: hashedPassword,
-        role: 'admin',
-        position: 'Administrador do Sistema',
-        bio: 'Administrador principal do sistema Ascension.',
-        phone: '',
-        socialLinks: JSON.stringify({
-          linkedin: '',
-          github: '',
-          instagram: ''
-        })
-      }
+      },
     });
-    
-    console.log('Administrador padrão criado com sucesso!');
+    console.log('Admin padrão criado: admin / admin123');
   } else {
-    console.log('Administrador já existe, pulando criação.');
+    console.log('Admin padrão já existe');
   }
+
+  // Adicione aqui outros dados de seed, se necessário
+  
+  console.log(`Seeding finished.`);
 }
 
 main()
