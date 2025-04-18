@@ -1,0 +1,42 @@
+[build]
+  publish = ".next"
+
+# Configuração dos formulários
+[forms]
+  # Formulário de contato
+  [forms.contato]
+    name = "contato"
+    fields = { name = "Nome", email = "Email", phone = "Telefone", subject = "Assunto", message = "Mensagem" }
+
+  # Formulário de orçamento
+  [forms.orcamento]
+    name = "orcamento"
+    fields = { name = "Nome", email = "Email", phone = "Telefone", company = "Empresa", projectType = "Tipo de Projeto", projectDescription = "Descrição do Projeto", deadline = "Prazo", budget = "Orçamento", features = "Funcionalidades", designPreferences = "Preferências de Design", references = "Referências", howFound = "Como nos encontrou", additionalInfo = "Informações Adicionais" }
+
+  # Formulário de newsletter
+  [forms.newsletter]
+    name = "newsletter"
+    fields = { email = "Email" }
+
+  # Formulário de solicitação de serviço
+  [forms.servico]
+    name = "servico"
+    fields = { name = "Nome", email = "Email", phone = "Telefone", service = "Serviço", message = "Mensagem" }
+
+# Configuração de notificações por e-mail
+[[forms.contato.notifications]]
+  to = "ascensionpremium@gmail.com"
+  subject = "Novo contato pelo site Ascension"
+  body = "Nome: {{name}}\nEmail: {{email}}\nTelefone: {{phone}}\nAssunto: {{subject}}\nMensagem: {{message}}"
+
+[[forms.orcamento.notifications]]
+  to = "ascensionpremium@gmail.com"
+  subject = "Nova solicitação de orçamento pelo site Ascension"
+
+[[forms.newsletter.notifications]]
+  to = "ascensionpremium@gmail.com"
+  subject = "Nova inscrição na newsletter"
+
+[[forms.servico.notifications]]
+  to = "ascensionpremium@gmail.com"
+  subject = "Nova solicitação de serviço pelo site Ascension" 

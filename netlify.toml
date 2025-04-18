@@ -1,5 +1,5 @@
 [build]
-  command = "cp .env.local .env && npx prisma generate && next build"
+  command = "next build"
   publish = ".next"
   functions = "netlify/functions"
 
@@ -8,6 +8,7 @@
   NPM_VERSION = "9"
   NEXT_TELEMETRY_DISABLED = "1"
   NEXT_PUBLIC_RUNTIME = "netlify"
+  NEXT_PUBLIC_CONTACT_EMAIL = "ascensionpremium@gmail.com"
   PRISMA_GENERATE_IN_POSTBUILD = "true"
   PRISMA_CLI_BINARY_TARGETS = "rhel-openssl-1.0.x,debian-openssl-3.0.x"
   # Não é necessário configurar variáveis de ambiente no painel do Netlify
