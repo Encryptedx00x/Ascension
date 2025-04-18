@@ -9,8 +9,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  directUrl = env("POSTGRES_URL_NON_POOLING")
-  url = env("POSTGRES_PRISMA_URL")
+  url      = env("DATABASE_URL")
 }
 
 enum BudgetStatus {
