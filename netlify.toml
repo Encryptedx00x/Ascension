@@ -9,7 +9,7 @@
   NEXT_TELEMETRY_DISABLED = "1"
   NEXT_PUBLIC_RUNTIME = "netlify"
   PRISMA_GENERATE_IN_POSTBUILD = "true"
-  PRISMA_CLI_BINARY_TARGETS = "rhel-openssl-1.0.x"
+  PRISMA_CLI_BINARY_TARGETS = "rhel-openssl-1.0.x,debian-openssl-3.0.x"
   # As variáveis POSTGRES_PRISMA_URL, POSTGRES_URL_NON_POOLING e JWT_SECRET
   # devem ser configuradas no painel do Netlify
 
