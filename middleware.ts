@@ -1,109 +1,87 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-// Função para decodificar um token JWT sem usar crypto
-function decodeJwtToken(token: string) {
-  try {
-    // Decodificar apenas a parte do payload sem verificar a assinatura
-    const base64Url = token.split('.')[1];
-    if (!base64Url) return null;
-    
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = Buffer.from(base64, 'base64').toString('utf-8');
-    const payload = JSON.parse(jsonPayload);
-    
-    // Verificar expiração
-    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
-      console.log('Token expirado:', payload.exp, '<', Math.floor(Date.now() / 1000));
-      return null;
-    }
-    
-    return payload;
-  } catch (error) {
-    console.error('Erro ao decodificar token:', error);
-    return null;
-  }
+// Arrays de rotas protegidas e públicas
+const PROTECTED_ROUTES = [
+  '/admin/dashboard',
+  '/admin/equipe',
+  '/admin/portfolio',
+  '/admin/orcamentos',
+  '/admin/contatos',
+  '/admin/newsletter',
+  '/admin/solicitacoes',
+];
+
+const PUBLIC_ROUTES = [
+  '/',
+  '/contato',
+  '/portfolio',
+  '/servicos',
+  '/sobre',
+  '/orcamento',
+  '/admin/login'
+];
+
+// Obtém o token JWT dos cookies
+function getJwtFromCookies(req: NextRequest) {
+  const token = req.cookies.get('authToken')?.value;
+  return token;
 }
 
-// FORÇAR AUTENTICAÇÃO EM TODAS AS ROTAS ADMINISTRATIVAS
-const DEV_MODE = false; // Forçando autenticação mesmo em ambiente de desenvolvimento
-
-export const runtime = 'nodejs';
-
-export async function middleware(request: NextRequest) {
-  // Lista de rotas públicas que não requerem autenticação
-  const publicRoutes = [
-    '/api/auth/login',
-    '/api/auth/logout',
-    '/api/auth/check',
-    '/admin/login',
-    '/admin/diagnose',
-    '/admin/check-login'
-  ];
+// Mock de verificação de autenticação
+async function verifyAuth(token: string | undefined) {
+  if (!token) {
+    return false;
+  }
   
-  // Verificar se a rota atual está na lista de rotas públicas
-  const isPublicRoute = publicRoutes.some(route => 
-    request.nextUrl.pathname === route || 
-    request.nextUrl.pathname.startsWith('/api/public/') || 
-    !request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/api/admin')
+  // Em produção, isso verificaria o token com um serviço
+  // Aqui, apenas verificamos se existe um token (demonstração)
+  return true;
+}
+
+// Middleware principal
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  
+  // Verificar se é uma rota de API ou recursos estáticos
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/static') ||
+    pathname.startsWith('/images') ||
+    pathname.startsWith('/api')
+  ) {
+    return NextResponse.next();
+  }
+
+  // Verificar se a rota requer autenticação
+  const isProtectedRoute = PROTECTED_ROUTES.some(route => 
+    pathname === route || pathname.startsWith(`${route}/`)
   );
-  
-  // Se for uma rota pública, permitir o acesso sem verificação
-  if (isPublicRoute) {
-    return NextResponse.next();
-  }
-  
-  // Em modo de desenvolvimento, permitir todas as rotas sem verificação
-  if (DEV_MODE) {
+
+  if (!isProtectedRoute) {
     return NextResponse.next();
   }
 
-  // Verificar se é uma rota administrativa
-  if (request.nextUrl.pathname.startsWith('/admin') || 
-      request.nextUrl.pathname.startsWith('/api/admin')) {
-    try {
-      // Obter o token do cookie
-      const token = request.cookies.get('adminToken')?.value;
-      
-      if (!token) {
-        console.log('Token não encontrado, redirecionando para login');
-        return NextResponse.redirect(new URL('/admin/login', request.url));
-      }
+  // Verificar autenticação para rotas protegidas
+  const token = getJwtFromCookies(req);
+  const isAuthenticated = await verifyAuth(token);
 
-      // Decodificar o payload do token sem verificar a assinatura
-      const payload = decodeJwtToken(token);
-      
-      if (!payload) {
-        console.log('Token inválido ou expirado, redirecionando para login');
-        return NextResponse.redirect(new URL('/admin/login', request.url));
-      }
-
-      // Verificar se o usuário é um admin
-      if (payload.role !== 'admin') {
-        console.log('Usuário não é admin, redirecionando para login');
-        return NextResponse.redirect(new URL('/admin/login', request.url));
-      }
-
-      // Se chegou aqui, o token parece válido e o usuário é admin
-      console.log('Token válido, permitindo acesso');
-      return NextResponse.next();
-    } catch (error) {
-      console.error('Erro no middleware:', error);
-      return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
+  if (!isAuthenticated && isProtectedRoute) {
+    // Redirecionar para login se não estiver autenticado
+    const url = new URL('/admin/login', req.url);
+    url.searchParams.set('callbackUrl', encodeURI(pathname));
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
 }
 
+// Configurar o matcher para o middleware
 export const config = {
   matcher: [
-    // Página de login e APIs de autenticação
-    '/admin/login',
-    '/api/auth/:path*',
-    
-    // Todas as rotas administrativas
-    '/admin/:path*',
-    '/api/admin/:path*',
-  ]
+    /*
+     * Corresponde a todas as rotas, exceto:
+     * 1. Rotas de API (_next, /static, etc.)
+     */
+    '/((?!_next|static|images|favicon.ico|api).*)',
+  ],
 }; 
