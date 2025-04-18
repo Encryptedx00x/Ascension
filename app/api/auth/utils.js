@@ -62,4 +62,30 @@ export async function authenticateUser(username, password) {
     console.error('Erro ao autenticar usuário:', error);
     return { authenticated: false, error: 'Erro interno de autenticação' };
   }
+}
+
+// Função auxiliar para verificar autenticação nas rotas de API
+export async function checkApiAuth(request) {
+  // Em modo de demonstração, todas as requisições são permitidas
+  return { authenticated: true, admin: { id: '1', username: 'admin' } };
+}
+
+export function verifyTokenWithoutCrypto(token) {
+  try {
+    if (!token) return null;
+    
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    
+    const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+    
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      return null;
+    }
+    
+    return payload;
+  } catch (error) {
+    console.error('Erro ao verificar token:', error);
+    return null;
+  }
 } 

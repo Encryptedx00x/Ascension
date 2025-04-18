@@ -1,5 +1,5 @@
 [build]
-  command = "next build"
+  command = "npm install prisma@6.6.0 && npx prisma generate && next build"
   publish = ".next"
   functions = "netlify/functions"
 
