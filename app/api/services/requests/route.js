@@ -1,45 +1,51 @@
-import { prisma } from '../../../utils/mockClient';
+import { sendServiceRequestNotification } from "../../../lib/mailer";
 
 export async function GET() {
+  return new Response(JSON.stringify([]), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+}
+
+export async function POST(request) {
   try {
-    const serviceRequests = await prisma.serviceRequest.findMany();
+    const data = await request.json();
     
-    return new Response(JSON.stringify(serviceRequests), {
+    // Validar campos obrigatórios
+    if (!data.name || !data.email || !data.service || !data.message) {
+      return new Response(JSON.stringify({
+        error: 'Nome, email, serviço e mensagem são campos obrigatórios'
+      }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+    
+    // Enviar notificação por email ao invés de salvar no banco de dados
+    const result = await sendServiceRequestNotification(data);
+    
+    if (!result.success) {
+      throw new Error('Falha ao enviar a notificação de solicitação de serviço');
+    }
+    
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'Solicitação recebida com sucesso! Entraremos em contato em breve.'
+    }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json'
       }
     });
   } catch (error) {
-    console.error('Erro ao buscar solicitações de serviço:', error);
-    return new Response(JSON.stringify({ error: 'Erro ao buscar solicitações de serviço' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  }
-}
-
-export async function POST(request) {
-  try {
-    const data = await request.json();
-    const newRequest = await prisma.serviceRequest.create({ 
-      data: {
-        ...data,
-        status: 'pendente'
-      } 
-    });
-    
-    return new Response(JSON.stringify(newRequest), {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  } catch (error) {
-    console.error('Erro ao criar solicitação de serviço:', error);
-    return new Response(JSON.stringify({ error: 'Erro ao criar solicitação de serviço' }), {
+    console.error('Erro ao processar solicitação de serviço:', error);
+    return new Response(JSON.stringify({ 
+      error: 'Erro ao processar sua solicitação. Por favor, tente novamente mais tarde.' 
+    }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json'

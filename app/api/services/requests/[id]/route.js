@@ -3,30 +3,19 @@ import { checkApiAuth } from '../../../../api/auth/utils';
 
 export async function GET(request, { params }) {
   try {
-    // Verificar autenticação
-    const authResult = await checkApiAuth(request);
-    if (!authResult.authenticated) {
-      return new Response(JSON.stringify({ error: 'Não autorizado' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-    }
-    
     const { id } = params;
-    const serviceRequest = await prisma.serviceRequest.findUnique({
-      where: { id }
-    });
     
-    if (!serviceRequest) {
-      return new Response(JSON.stringify({ error: 'Solicitação de serviço não encontrada' }), {
-        status: 404,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-    }
+    // Dados estáticos simulados
+    const serviceRequest = {
+      id,
+      name: 'Cliente Exemplo',
+      email: 'cliente@exemplo.com',
+      phone: '(11) 99999-9999',
+      service: 'Desenvolvimento Web',
+      message: 'Preciso de um site para minha empresa com sistema de login e área administrativa.',
+      status: 'pendente',
+      createdAt: new Date().toISOString()
+    };
     
     return new Response(JSON.stringify(serviceRequest), {
       status: 200,
@@ -47,26 +36,12 @@ export async function GET(request, { params }) {
 
 export async function PUT(request, { params }) {
   try {
-    // Verificar autenticação
-    const authResult = await checkApiAuth(request);
-    if (!authResult.authenticated) {
-      return new Response(JSON.stringify({ error: 'Não autorizado' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-    }
-    
-    const { id } = params;
-    const data = await request.json();
-    
-    const updatedRequest = await prisma.serviceRequest.update({
-      where: { id },
-      data
-    });
-    
-    return new Response(JSON.stringify(updatedRequest), {
+    // Simulação de atualização bem-sucedida
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'Solicitação atualizada com sucesso',
+      id: params.id
+    }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json'

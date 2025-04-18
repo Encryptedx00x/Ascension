@@ -1,5 +1,5 @@
 [build]
-  command = "npm install prisma@6.6.0 && npx prisma generate && next build"
+  command = "next build"
   publish = ".next"
   functions = "netlify/functions"
 
@@ -8,11 +8,8 @@
   NPM_VERSION = "9"
   NEXT_TELEMETRY_DISABLED = "1"
   NEXT_PUBLIC_RUNTIME = "netlify"
-  NEXT_PUBLIC_CONTACT_EMAIL = "ascensionpremium@gmail.com"
-  PRISMA_GENERATE_IN_POSTBUILD = "true"
-  PRISMA_CLI_BINARY_TARGETS = "rhel-openssl-1.0.x,debian-openssl-3.0.x"
+  NEXT_PUBLIC_CONTACT_EMAIL = "dyogoho@gmail.com"
   # Não é necessário configurar variáveis de ambiente no painel do Netlify
-  # pois estamos usando o arquivo .env.local
 
 [dev]
   command = "npm run dev"
@@ -21,7 +18,6 @@
 
 [functions]
   node_bundler = "esbuild"
-  included_files = ["prisma/**", "node_modules/.prisma/**"]
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

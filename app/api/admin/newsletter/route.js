@@ -1,22 +1,38 @@
 import { prisma } from '../../../utils/mockClient';
 import { checkApiAuth } from '../../auth/utils';
 
-export async function GET(request) {
+export async function GET() {
   try {
-    // Verificar autenticação
-    const authResult = await checkApiAuth(request);
-    if (!authResult.authenticated) {
-      return new Response(JSON.stringify({ error: 'Não autorizado' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-    }
+    // Dados estáticos de assinantes da newsletter
+    const subscribers = [
+      {
+        id: 1,
+        email: 'exemplo1@email.com',
+        createdAt: new Date('2023-01-15').toISOString()
+      },
+      {
+        id: 2,
+        email: 'exemplo2@email.com',
+        createdAt: new Date('2023-02-20').toISOString()
+      },
+      {
+        id: 3,
+        email: 'exemplo3@email.com',
+        createdAt: new Date('2023-03-10').toISOString()
+      },
+      {
+        id: 4,
+        email: 'exemplo4@email.com',
+        createdAt: new Date('2023-04-05').toISOString()
+      },
+      {
+        id: 5,
+        email: 'exemplo5@email.com',
+        createdAt: new Date('2023-05-22').toISOString()
+      }
+    ];
     
-    const newsletterSubscriptions = await prisma.newsletter.findMany();
-    
-    return new Response(JSON.stringify(newsletterSubscriptions), {
+    return new Response(JSON.stringify(subscribers), {
       status: 200,
       headers: {
         'Content-Type': 'application/json'
@@ -33,35 +49,15 @@ export async function GET(request) {
   }
 }
 
-export async function POST(request) {
-  try {
-    // Verificar autenticação
-    const authResult = await checkApiAuth(request);
-    if (!authResult.authenticated) {
-      return new Response(JSON.stringify({ error: 'Não autorizado' }), {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+export async function POST() {
+  // Simulação de criação bem-sucedida
+  return new Response(JSON.stringify({ 
+    success: true, 
+    message: 'Assinatura adicionada com sucesso' 
+  }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json'
     }
-    
-    const data = await request.json();
-    const newSubscription = await prisma.newsletter.create({ data });
-    
-    return new Response(JSON.stringify(newSubscription), {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  } catch (error) {
-    console.error('Erro ao criar assinatura da newsletter:', error);
-    return new Response(JSON.stringify({ error: 'Erro ao criar assinatura da newsletter' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-  }
+  });
 } 
