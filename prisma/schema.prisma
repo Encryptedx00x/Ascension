@@ -3,11 +3,14 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["metrics"]
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+  url = env("POSTGRES_PRISMA_URL")
 }
 
 enum BudgetStatus {
